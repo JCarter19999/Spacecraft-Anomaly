@@ -1,0 +1,31 @@
+# Edit these paths for your machine
+DATA:
+  TELEMETRY_CSV: data/raw/telemetry_train.csv   # timestamp + 87 columns
+  LABELS_CSV:    data/raw/labels_train.csv      # start_time,end_time,event_type
+  TIMESTAMP_COL: timestamp
+  IGNORE_EVENTS: ["communication_gap", "rare_event"]
+  USE_EVENTS:    ["anomaly"]
+  TRAIN_SPLIT: 0.6
+  VAL_SPLIT: 0.2
+  TEST_SPLIT: 0.2
+  WINDOW: 128
+  STRIDE: 4
+  CACHE_DIR: data/processed
+
+MODEL:
+  NAME: tcn
+  TCN_CHANNELS: [64, 64, 128]
+  KERNEL_SIZE: 3
+  DROPOUT: 0.2
+
+TRAIN:
+  BATCH_SIZE: 64
+  LR: 0.001
+  EPOCHS: 10
+  LOSS: bce  # bce | focal (not implemented) | mse (for AE)
+  CLASS_WEIGHT: 4.0  # up-weight positives
+  DEVICE: cuda
+
+EVAL:
+  THRESHOLD: 0.5
+  EVENT_TOLERANCE_SEC: 0  # set >0 if your timestamps are in seconds and labels are intervals
